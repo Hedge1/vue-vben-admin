@@ -12,7 +12,7 @@
             },
           ]"
         >
-          <div class="mix-sidebar" />
+          <div class="mix-sidebar"></div>
         </div>
       </Tooltip>
     </template>
@@ -31,7 +31,7 @@
     props: {
       menuTypeList: {
         type: Array as PropType<typeof menuTypeList>,
-        defualt: [],
+        defualt: () => [],
       },
       handler: {
         type: Function as PropType<Fn>,
@@ -39,6 +39,7 @@
       },
       def: {
         type: String,
+        default: '',
       },
     },
     setup() {
@@ -51,7 +52,6 @@
   });
 </script>
 <style lang="less" scoped>
-  @import (reference) '../../../../design/index.less';
   @prefix-cls: ~'@{namespace}-setting-menu-type-picker';
 
   .@{prefix-cls} {

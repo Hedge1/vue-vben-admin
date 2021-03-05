@@ -1,5 +1,5 @@
 <template>
-  <span ref="elRef" :class="[$attrs.class, 'app-iconify anticon']" :style="getWrapStyle" />
+  <span ref="elRef" :class="[$attrs.class, 'app-iconify anticon']" :style="getWrapStyle"></span>
 </template>
 <script lang="ts">
   import type { PropType } from 'vue';
@@ -16,6 +16,7 @@
   import Iconify from '@purge-icons/generated';
   import { isString } from '/@/utils/is';
   import { propTypes } from '/@/utils/propTypes';
+
   export default defineComponent({
     name: 'GIcon',
     props: {
@@ -45,7 +46,6 @@
           const icon = unref(getIconRef);
           if (!icon) return;
           const svg = Iconify.renderSVG(icon, {});
-
           if (svg) {
             el.textContent = '';
             el.appendChild(svg);
@@ -74,7 +74,7 @@
         }
       );
 
-      // watch(() => props.icon, update, { flush: 'post' });
+      watch(() => props.icon, update, { flush: 'post' });
 
       onMounted(update);
 
@@ -83,8 +83,6 @@
   });
 </script>
 <style lang="less">
-  @import (reference) '../../../design/index.less';
-
   .app-iconify {
     display: inline-block;
     vertical-align: middle;

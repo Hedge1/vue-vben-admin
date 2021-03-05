@@ -5,10 +5,10 @@ import type { NamePath } from 'ant-design-vue/lib/form/interface';
 import { unref, toRaw } from 'vue';
 
 import { isArray, isFunction, isObject, isString } from '/@/utils/is';
-import { deepMerge, unique } from '/@/utils';
+import { deepMerge } from '/@/utils';
 import { dateItemType, handleInputNumberValue } from '../helper';
-import moment from 'moment';
-import { cloneDeep } from 'lodash-es';
+import { dateUtil } from '/@/utils/dateUtil';
+import { cloneDeep, uniqBy } from 'lodash-es';
 import { error } from '/@/utils/log';
 
 interface UseFormActionContext {
@@ -59,19 +59,21 @@ export function useFormEvents({
       const schema = unref(getSchema).find((item) => item.field === key);
       let value = values[key];
 
+      const hasKey = Reflect.has(values, key);
+
       value = handleInputNumberValue(schema?.component, value);
       // 0| '' is allow
-      if (value !== undefined && value !== null && fields.includes(key)) {
+      if (hasKey && fields.includes(key)) {
         // time type
         if (itemIsDateType(key)) {
           if (Array.isArray(value)) {
             const arr: moment.Moment[] = [];
             for (const ele of value) {
-              arr.push(moment(ele));
+              arr.push(dateUtil(ele));
             }
             formModel[key] = arr;
           } else {
-            formModel[key] = moment(value);
+            formModel[key] = dateUtil(value);
           }
         } else {
           formModel[key] = value;
@@ -160,7 +162,7 @@ export function useFormEvents({
         }
       });
     });
-    schemaRef.value = unique(schema, 'field');
+    schemaRef.value = uniqBy(schema, 'field');
   }
 
   function getFieldsValue(): Recordable {

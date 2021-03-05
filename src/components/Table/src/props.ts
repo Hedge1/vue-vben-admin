@@ -44,6 +44,13 @@ export const basicProps = {
     default: null,
   },
 
+  summaryData: {
+    type: Array as PropType<Recordable[]>,
+    default: null,
+  },
+
+  indentSize: propTypes.number.def(24),
+
   canColDrag: propTypes.bool.def(true),
   api: {
     type: Function as PropType<(...arg: any[]) => Promise<any>>,
@@ -69,11 +76,10 @@ export const basicProps = {
   },
   // 立即请求接口
   immediate: propTypes.bool.def(true),
-
   emptyDataIsShowTable: propTypes.bool.def(true),
   // 额外的请求参数
   searchInfo: {
-    type: Object as PropType<any>,
+    type: Object as PropType<Recordable>,
     default: null,
   },
   // 使用搜索表单
@@ -125,12 +131,10 @@ export const basicProps = {
     type: [Object, Boolean] as PropType<PaginationProps | boolean>,
     default: null,
   },
-
   loading: propTypes.bool,
   rowClassName: {
     type: Function as PropType<(record: TableCustomRecord<any>, index: number) => string>,
   },
-
   scroll: {
     type: Object as PropType<{ x: number | true; y: number }>,
     default: null,

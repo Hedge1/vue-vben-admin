@@ -1,13 +1,23 @@
 import type { BasicTableProps, FetchParams, SorterResult } from '../types/table';
 import type { PaginationProps } from '../types/pagination';
 
-import { ref, unref, ComputedRef, computed, onMounted, watch, reactive } from 'vue';
+import {
+  ref,
+  unref,
+  ComputedRef,
+  computed,
+  onMounted,
+  watch,
+  reactive,
+  Ref,
+  watchEffect,
+} from 'vue';
 
 import { useTimeoutFn } from '/@/hooks/core/useTimeout';
 
 import { buildUUID } from '/@/utils/uuid';
 import { isFunction, isBoolean } from '/@/utils/is';
-import { get } from 'lodash-es';
+import { get, cloneDeep } from 'lodash-es';
 
 import { FETCH_SETTING, ROW_KEY, PAGE_SIZE } from '../const';
 
@@ -17,6 +27,7 @@ interface ActionType {
   setLoading: (loading: boolean) => void;
   getFieldsValue: () => Recordable;
   clearSelectedRowKeys: () => void;
+  tableData: Ref<Recordable[]>;
 }
 
 interface SearchState {
@@ -31,6 +42,7 @@ export function useDataSource(
     setLoading,
     getFieldsValue,
     clearSelectedRowKeys,
+    tableData,
   }: ActionType,
   emit: EmitType
 ) {
@@ -44,6 +56,10 @@ export function useDataSource(
   //   const { dataSource, api } = unref(propsRef);
   //   !api && dataSource && (dataSourceRef.value = dataSource);
   // });
+
+  watchEffect(() => {
+    tableData.value = unref(dataSourceRef);
+  });
 
   watch(
     () => unref(propsRef).dataSource,
@@ -114,7 +130,8 @@ export function useDataSource(
 
       if (firstItem && lastItem) {
         if (!firstItem[ROW_KEY] || !lastItem[ROW_KEY]) {
-          unref(dataSourceRef).forEach((item) => {
+          const data = cloneDeep(unref(dataSourceRef));
+          data.forEach((item) => {
             if (!item[ROW_KEY]) {
               item[ROW_KEY] = buildUUID();
             }
@@ -122,6 +139,7 @@ export function useDataSource(
               setTableKey(item.children);
             }
           });
+          dataSourceRef.value = data;
         }
       }
     }
@@ -137,9 +155,15 @@ export function useDataSource(
   }
 
   async function fetch(opt?: FetchParams) {
-    const { api, searchInfo, fetchSetting, beforeFetch, afterFetch, useSearchForm } = unref(
-      propsRef
-    );
+    const {
+      api,
+      searchInfo,
+      fetchSetting,
+      beforeFetch,
+      afterFetch,
+      useSearchForm,
+      pagination,
+    } = unref(propsRef);
     if (!api || !isFunction(api)) return;
     try {
       setLoading(true);
@@ -148,7 +172,7 @@ export function useDataSource(
 
       const { current = 1, pageSize = PAGE_SIZE } = unref(getPaginationInfo) as PaginationProps;
 
-      if (isBoolean(getPaginationInfo)) {
+      if (!pagination || isBoolean(getPaginationInfo)) {
         pageParams = {};
       } else {
         pageParams[pageField] = (opt && opt.page) || current;
@@ -161,11 +185,11 @@ export function useDataSource(
         ...pageParams,
         ...(useSearchForm ? getFieldsValue() : {}),
         ...searchInfo,
-        ...(opt ? opt.searchInfo : {}),
-        ...(opt ? opt.sortInfo : {}),
-        ...(opt ? opt.filterInfo : {}),
+        ...(opt?.searchInfo ?? {}),
         ...sortInfo,
         ...filterInfo,
+        ...(opt?.sortInfo ?? {}),
+        ...(opt?.filterInfo ?? {}),
       };
       if (beforeFetch && isFunction(beforeFetch)) {
         params = beforeFetch(params) || params;
@@ -179,12 +203,14 @@ export function useDataSource(
       const resultTotal: number = isArrayResult ? 0 : get(res, totalField);
 
       // 假如数据变少，导致总页数变少并小于当前选中页码，通过getPaginationRef获取到的页码是不正确的，需获取正确的页码再次执行
-      const currentTotalPage = Math.ceil(resultTotal / pageSize);
-      if (current > currentTotalPage) {
-        setPagination({
-          current: currentTotalPage,
-        });
-        fetch(opt);
+      if (resultTotal) {
+        const currentTotalPage = Math.ceil(resultTotal / pageSize);
+        if (current > currentTotalPage) {
+          setPagination({
+            current: currentTotalPage,
+          });
+          fetch(opt);
+        }
       }
 
       if (afterFetch && isFunction(afterFetch)) {

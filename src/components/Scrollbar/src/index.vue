@@ -17,8 +17,9 @@
   </div>
 </template>
 <script lang="ts">
-  import { addResizeListener, removeResizeListener } from '/@/utils/event/resizeEvent';
-
+  import { addResizeListener, removeResizeListener } from '/@/utils/event';
+  import componentSetting from '/@/settings/componentSetting';
+  const { scrollbar } = componentSetting;
   import { toObject } from './util';
   import {
     defineComponent,
@@ -28,16 +29,18 @@
     nextTick,
     provide,
     computed,
+    unref,
   } from 'vue';
   import Bar from './bar';
 
   export default defineComponent({
     name: 'Scrollbar',
+    // inheritAttrs: false,
     components: { Bar },
     props: {
       native: {
         type: Boolean,
-        default: false,
+        default: scrollbar?.native ?? false,
       },
       wrapStyle: {
         type: [String, Array],
@@ -71,18 +74,25 @@
 
       provide('scroll-bar-wrap', wrap);
 
+      const style = computed(() => {
+        if (Array.isArray(props.wrapStyle)) {
+          return toObject(props.wrapStyle);
+        }
+        return props.wrapStyle;
+      });
+
       const handleScroll = () => {
         if (!props.native) {
-          moveY.value = (wrap.value.scrollTop * 100) / wrap.value.clientHeight;
-          moveX.value = (wrap.value.scrollLeft * 100) / wrap.value.clientWidth;
+          moveY.value = (unref(wrap).scrollTop * 100) / unref(wrap).clientHeight;
+          moveX.value = (unref(wrap).scrollLeft * 100) / unref(wrap).clientWidth;
         }
       };
 
       const update = () => {
-        if (!wrap.value) return;
+        if (!unref(wrap)) return;
 
-        const heightPercentage = (wrap.value.clientHeight * 100) / wrap.value.scrollHeight;
-        const widthPercentage = (wrap.value.clientWidth * 100) / wrap.value.scrollWidth;
+        const heightPercentage = (unref(wrap).clientHeight * 100) / unref(wrap).scrollHeight;
+        const widthPercentage = (unref(wrap).clientWidth * 100) / unref(wrap).scrollWidth;
 
         sizeHeight.value = heightPercentage < 100 ? heightPercentage + '%' : '';
         sizeWidth.value = widthPercentage < 100 ? widthPercentage + '%' : '';
@@ -91,20 +101,22 @@
       onMounted(() => {
         if (props.native) return;
         nextTick(update);
-        !props.noresize && addResizeListener(resize.value, update);
+        if (!props.noresize) {
+          addResizeListener(unref(resize), update);
+          addResizeListener(unref(wrap), update);
+          addEventListener('resize', update);
+        }
       });
 
       onBeforeUnmount(() => {
         if (props.native) return;
-        !props.noresize && removeResizeListener(resize.value, update);
-      });
-      const style = computed(() => {
-        let style: any = props.wrapStyle;
-        if (Array.isArray(props.wrapStyle)) {
-          style = toObject(props.wrapStyle);
+        if (!props.noresize) {
+          removeResizeListener(unref(resize), update);
+          removeResizeListener(unref(wrap), update);
+          removeEventListener('resize', update);
         }
-        return style;
       });
+
       return {
         moveX,
         moveY,
@@ -127,7 +139,7 @@
 
     &__wrap {
       height: 100%;
-      overflow: scroll;
+      overflow: auto;
 
       &--hidden-default {
         scrollbar-width: none;

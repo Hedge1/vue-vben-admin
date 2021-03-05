@@ -1,21 +1,23 @@
 <template>
-  <div class="p-4">
+  <PageWrapper title="右键菜单示例">
     <CollapseContainer title="Simple">
-      <a-button type="primary" @contextmenu="handleContext">Right Click on me</a-button>
+      <a-button type="primary" @contextmenu="handleContext"> Right Click on me </a-button>
     </CollapseContainer>
 
     <CollapseContainer title="Multiple" class="mt-4">
-      <a-button type="primary" @contextmenu="handleMultipleContext">Right Click on me</a-button>
+      <a-button type="primary" @contextmenu="handleMultipleContext"> Right Click on me </a-button>
     </CollapseContainer>
-  </div>
+  </PageWrapper>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
   import { useContextMenu } from '/@/hooks/web/useContextMenu';
   import { CollapseContainer } from '/@/components/Container';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { PageWrapper } from '/@/components/Page';
+
   export default defineComponent({
-    components: { CollapseContainer },
+    components: { CollapseContainer, PageWrapper },
     setup() {
       const [createContextMenu] = useContextMenu();
       const { createMessage } = useMessage();

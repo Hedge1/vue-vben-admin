@@ -1,10 +1,10 @@
 <template>
-  <slot name="tableTitle" v-if="$slots.tableTitle" />
+  <slot name="tableTitle" v-if="$slots.tableTitle"></slot>
   <TableTitle :helpMessage="titleHelpMessage" :title="title" v-if="!$slots.tableTitle && title" />
 
   <div :class="`${prefixCls}__toolbar`">
-    <slot name="toolbar" />
-    <Divider type="vertical" v-if="$slots.toolbar" />
+    <slot name="toolbar"></slot>
+    <Divider type="vertical" v-if="$slots.toolbar && showTableSetting" />
     <TableSetting :setting="tableSetting" v-if="showTableSetting" />
   </div>
 </template>

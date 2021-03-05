@@ -1,5 +1,5 @@
 <template>
-  <div class="m-4">
+  <PageWrapper title="Icon组件示例">
     <CollapseContainer title="Antv Icon使用 (直接按需引入相应组件即可)">
       <div class="flex justify-around">
         <GithubFilled :style="{ fontSize: '30px' }" />
@@ -14,20 +14,26 @@
 
     <CollapseContainer title="IconIfy 组件使用" class="my-5">
       <div class="flex justify-around flex-wrap">
-        <Icon icon="fa-solid:address-book" :size="30" />
-        <Icon icon="mdi-light:bank" :size="30" />
-        <Icon icon="jam:alien-f" :size="30" />
-        <Icon icon="jam:android" :size="30" />
+        <Icon icon="ion:layers-outline" :size="30" />
+        <Icon icon="ion:bar-chart-outline" :size="30" />
+        <Icon icon="ion:tv-outline" :size="30" />
+        <Icon icon="ion:settings-outline" :size="30" />
+      </div>
+    </CollapseContainer>
+
+    <CollapseContainer title="图标选择器" class="my-5">
+      <div class="flex justify-around flex-wrap">
+        <IconPicker />
       </div>
     </CollapseContainer>
 
     <Alert
       show-icon
       message="推荐使用Iconify组件"
-      description="Icon组件基本包含所有的图标,在下面网址内你可以查询到你想要的任何图标。并且打包只会打包所用到的图标。唯一不足的可能就是需要连接外网进行使用。"
+      description="Icon组件基本包含所有的图标,在下面网址内你可以查询到你想要的任何图标。并且打包只会打包所用到的图标。"
     />
-    <a-button type="link" @click="toIconify">Iconify 图标大全</a-button>
-  </div>
+    <a-button type="link" @click="toIconify"> Iconify 图标大全 </a-button>
+  </PageWrapper>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
@@ -43,12 +49,14 @@
     CodepenCircleFilled,
   } from '@ant-design/icons-vue';
 
-  import Icon from '/@/components/Icon/index';
+  import { Icon, IconPicker } from '/@/components/Icon/index';
 
   import { openWindow } from '/@/utils';
+  import { PageWrapper } from '/@/components/Page';
 
   export default defineComponent({
     components: {
+      PageWrapper,
       CollapseContainer,
       GithubFilled,
       QqCircleFilled,
@@ -59,6 +67,7 @@
       CodepenCircleFilled,
       Icon,
       Alert,
+      IconPicker,
     },
     setup() {
       return {

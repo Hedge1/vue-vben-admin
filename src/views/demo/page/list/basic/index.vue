@@ -1,6 +1,5 @@
 <template>
-  <div :class="prefixCls">
-    <a-page-header title="标准列表" :ghost="false" />
+  <PageWrapper :class="prefixCls" title="标准列表">
     <div :class="`${prefixCls}__top`">
       <a-row :gutter="12">
         <a-col :span="8" :class="`${prefixCls}__top-col`">
@@ -33,7 +32,9 @@
                 </div>
               </template>
               <template #description>
-                <div class="description">{{ item.description }}</div>
+                <div class="description">
+                  {{ item.description }}
+                </div>
                 <div class="info">
                   <div><span>Owner</span>{{ item.author }}</div>
                   <div><span>开始时间</span>{{ item.datetime }}</div>
@@ -47,16 +48,27 @@
         </template>
       </a-list>
     </div>
-  </div>
+  </PageWrapper>
 </template>
 <script lang="ts">
-  import { Progress } from 'ant-design-vue';
+  import { Progress, Row, Col } from 'ant-design-vue';
   import { defineComponent } from 'vue';
   import Icon from '/@/components/Icon/index';
   import { cardList } from './data';
+  import { PageWrapper } from '/@/components/Page';
+  import { List } from 'ant-design-vue';
 
   export default defineComponent({
-    components: { Icon, Progress },
+    components: {
+      Icon,
+      Progress,
+      PageWrapper,
+      [List.name]: List,
+      [List.Item.name]: List.Item,
+      AListItemMeta: List.Item.Meta,
+      [Row.name]: Row,
+      [Col.name]: Col,
+    },
     setup() {
       return {
         prefixCls: 'list-basic',
@@ -73,7 +85,6 @@
   .list-basic {
     &__top {
       padding: 24px;
-      margin: 24px 24px 0 24px;
       text-align: center;
       background: #fff;
 
@@ -100,7 +111,7 @@
 
     &__content {
       padding: 24px;
-      margin: 12px 24px;
+      margin-top: 12px;
       background: #fff;
 
       .list {

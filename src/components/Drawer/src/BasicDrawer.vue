@@ -8,7 +8,7 @@
         @close="onClose"
       >
         <template #titleToolbar>
-          <slot name="titleToolbar" />
+          <slot name="titleToolbar"></slot>
         </template>
       </DrawerHeader>
     </template>
@@ -16,13 +16,13 @@
     <ScrollContainer
       :style="getScrollContentStyle"
       v-loading="getLoading"
-      :loading-tip="loadingText || t('component.drawer.loadingText')"
+      :loading-tip="loadingText || t('common.loadingText')"
     >
-      <slot />
+      <slot></slot>
     </ScrollContainer>
     <DrawerFooter v-bind="getProps" @close="onClose" @ok="handleOk" :height="getFooterHeight">
       <template #[item]="data" v-for="item in Object.keys($slots)">
-        <slot :name="item" v-bind="data" />
+        <slot :name="item" v-bind="data"></slot>
       </template>
     </DrawerFooter>
   </Drawer>
@@ -57,8 +57,8 @@
   import { useAttrs } from '/@/hooks/core/useAttrs';
 
   export default defineComponent({
-    inheritAttrs: false,
     components: { Drawer, ScrollContainer, DrawerFooter, DrawerHeader },
+    inheritAttrs: false,
     props: basicProps,
     emits: ['visible-change', 'ok', 'close', 'register'],
     setup(props, { emit }) {
@@ -199,7 +199,6 @@
   });
 </script>
 <style lang="less">
-  @import (reference) '../../../design/index.less';
   @header-height: 60px;
   @detail-header-height: 40px;
   @prefix-cls: ~'@{namespace}-basic-drawer';
@@ -219,7 +218,7 @@
     .ant-drawer-body {
       height: calc(100% - @header-height);
       padding: 0;
-      background-color: @background-color-dark;
+      background-color: #fff;
 
       .scrollbar__wrap {
         padding: 16px !important;

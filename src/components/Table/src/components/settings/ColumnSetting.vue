@@ -3,8 +3,8 @@
     <template #title>
       <span>{{ t('component.table.settingColumn') }}</span>
     </template>
+    <!-- :getPopupContainer="getPopupContainer" -->
     <Popover
-      :getPopupContainer="getPopupContainer"
       placement="bottomLeft"
       trigger="click"
       @visibleChange="handleVisibleChange"
@@ -33,7 +33,7 @@
           </Checkbox>
 
           <a-button size="small" type="link" @click="reset">
-            {{ t('component.table.settingReset') }}
+            {{ t('common.resetText') }}
           </a-button>
         </div>
       </template>
@@ -44,10 +44,14 @@
             <template v-for="item in plainOptions" :key="item.value">
               <div :class="`${prefixCls}__check-item`">
                 <DragOutlined class="table-coulmn-drag-icon" />
-                <Checkbox :value="item.value"> {{ item.label }} </Checkbox>
+                <Checkbox :value="item.value">
+                  {{ item.label }}
+                </Checkbox>
 
                 <Tooltip placement="bottomLeft" :mouseLeaveDelay="0.4">
-                  <template #title> {{ t('component.table.settingFixedLeft') }}</template>
+                  <template #title>
+                    {{ t('component.table.settingFixedLeft') }}
+                  </template>
                   <Icon
                     icon="line-md:arrow-align-left"
                     :class="[
@@ -62,7 +66,9 @@
                 </Tooltip>
                 <Divider type="vertical" />
                 <Tooltip placement="bottomLeft" :mouseLeaveDelay="0.4">
-                  <template #title> {{ t('component.table.settingFixedRight') }}</template>
+                  <template #title>
+                    {{ t('component.table.settingFixedRight') }}
+                  </template>
                   <Icon
                     icon="line-md:arrow-align-left"
                     :class="[
@@ -326,7 +332,7 @@
         if (isFixed && !item.width) {
           item.width = 100;
         }
-
+        table.setCacheColumnsByField?.(item.dataIndex, { fixed: isFixed });
         table.setColumns(columns);
       }
 
@@ -421,7 +427,7 @@
         // flex-wrap: wrap;
       }
 
-      .scroll-container {
+      .scrollbar {
         height: 220px;
       }
     }

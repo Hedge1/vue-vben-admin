@@ -1,15 +1,14 @@
 <template>
-  <div class="m-4">
+  <PageWrapper title="MarkDown组件嵌入Form示例">
     <CollapseContainer title="MarkDown表单">
       <BasicForm
         :labelWidth="100"
         :schemas="schemas"
         :actionColOptions="{ span: 24 }"
         @submit="handleSubmit"
-      >
-      </BasicForm>
+      />
     </CollapseContainer>
-  </div>
+  </PageWrapper>
 </template>
 <script lang="ts">
   import { defineComponent, h } from 'vue';
@@ -17,6 +16,7 @@
   import { CollapseContainer } from '/@/components/Container/index';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { MarkDown } from '/@/components/Markdown';
+  import { PageWrapper } from '/@/components/Page';
 
   const schemas: FormSchema[] = [
     {
@@ -43,7 +43,7 @@
     },
   ];
   export default defineComponent({
-    components: { BasicForm, CollapseContainer },
+    components: { BasicForm, CollapseContainer, PageWrapper },
     setup() {
       const { createMessage } = useMessage();
 

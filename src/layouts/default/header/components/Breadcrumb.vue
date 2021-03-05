@@ -14,16 +14,16 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, toRaw, watchEffect } from 'vue';
-  import { useI18n } from 'vue-i18n';
-
   import type { RouteLocationMatched } from 'vue-router';
+
+  import { defineComponent, ref, toRaw, watchEffect } from 'vue';
+  import { Breadcrumb } from 'ant-design-vue';
+
   import { useRouter } from 'vue-router';
   import { filter } from '/@/utils/helper/treeHelper';
   import { REDIRECT_NAME } from '/@/router/constant';
   import Icon from '/@/components/Icon';
 
-  import { HomeOutlined } from '@ant-design/icons-vue';
   import { PageEnum } from '/@/enums/pageEnum';
 
   import { useDesign } from '/@/hooks/web/useDesign';
@@ -32,10 +32,11 @@
   import { propTypes } from '/@/utils/propTypes';
   import { useGo } from '/@/hooks/web/usePage';
   import { isString } from '/@/utils/is';
+  import { useI18n } from '/@/hooks/web/useI18n';
 
   export default defineComponent({
     name: 'LayoutBreadcrumb',
-    components: { HomeOutlined, Icon },
+    components: { Icon, [Breadcrumb.name]: Breadcrumb },
     props: {
       theme: propTypes.oneOf(['dark', 'light']),
     },
@@ -90,7 +91,7 @@
           return true;
         }).filter((item) => !item.meta?.hideBreadcrumb || !item.meta?.hideMenu);
 
-        resultList = resultList.filter((item) => item.path !== PageEnum.BASE_HOME);
+        // resultList = resultList.filter((item) => item.path !== PageEnum.BASE_HOME);
         return resultList;
       }
 
@@ -147,7 +148,6 @@
   });
 </script>
 <style lang="less">
-  @import (reference) '../../../../design/index.less';
   @prefix-cls: ~'@{namespace}-layout-breadcrumb';
 
   .@{prefix-cls} {

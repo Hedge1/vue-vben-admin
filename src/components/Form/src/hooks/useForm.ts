@@ -1,4 +1,4 @@
-import { ref, onUnmounted, unref, nextTick, watchEffect } from 'vue';
+import { ref, onUnmounted, unref, nextTick, watch } from 'vue';
 
 import { isInSetup } from '/@/utils/helper/vueHelper';
 import { isProdMode } from '/@/utils/env';
@@ -7,7 +7,7 @@ import { getDynamicProps } from '/@/utils';
 
 import type { FormProps, FormActionType, UseFormReturnType, FormSchema } from '../types/form';
 import type { NamePath } from 'ant-design-vue/lib/form/interface';
-import type { DynamicProps } from '/@/types/utils';
+import type { DynamicProps } from '/#/utils';
 
 export declare type ValidateFields = (nameList?: NamePath[]) => Promise<Recordable>;
 
@@ -39,12 +39,18 @@ export function useForm(props?: Props): UseFormReturnType {
     if (unref(loadedRef) && isProdMode() && instance === unref(formRef)) return;
 
     formRef.value = instance;
-
     loadedRef.value = true;
 
-    watchEffect(() => {
-      props && instance.setProps(getDynamicProps(props));
-    });
+    watch(
+      () => props,
+      () => {
+        props && instance.setProps(getDynamicProps(props));
+      },
+      {
+        immediate: true,
+        deep: true,
+      }
+    );
   }
 
   const methods: FormActionType = {
@@ -88,9 +94,13 @@ export function useForm(props?: Props): UseFormReturnType {
       form.setFieldsValue<T>(values);
     },
 
-    appendSchemaByField: async (schema: FormSchema, prefixField?: string | undefined) => {
+    appendSchemaByField: async (
+      schema: FormSchema,
+      prefixField: string | undefined,
+      first: boolean
+    ) => {
       const form = await getForm();
-      form.appendSchemaByField(schema, prefixField);
+      form.appendSchemaByField(schema, prefixField, first);
     },
 
     submit: async (): Promise<any> => {

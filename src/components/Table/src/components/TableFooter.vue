@@ -1,6 +1,6 @@
 <template>
   <Table
-    v-if="summaryFunc"
+    v-if="summaryFunc || summaryData"
     :showHeader="false"
     :bordered="false"
     :pagination="false"
@@ -32,6 +32,9 @@
       summaryFunc: {
         type: Function as PropType<Fn>,
       },
+      summaryData: {
+        type: Array as PropType<Recordable[]>,
+      },
       scroll: {
         type: Object as PropType<Recordable>,
       },
@@ -41,7 +44,11 @@
       const table = useTableContext();
 
       const getDataSource = computed((): Recordable[] => {
-        const { summaryFunc } = props;
+        const { summaryFunc, summaryData } = props;
+        if (summaryData?.length) {
+          summaryData.forEach((item, i) => (item[props.rowKey] = `${i}`));
+          return summaryData;
+        }
         if (!isFunction(summaryFunc)) {
           return [];
         }
@@ -68,12 +75,15 @@
             Reflect.deleteProperty(columns[index], 'customRender');
           }
         }
+
         if (table.getRowSelection() && hasRowSummary) {
+          const isFixed = columns.some((col) => col.fixed === 'left');
           columns.unshift({
             width: 60,
             title: 'selection',
             key: 'selectionKey',
             align: 'center',
+            ...(isFixed ? { fixed: 'left' } : {}),
             customRender: ({ record }) => record[SUMMARY_ROW_KEY],
           });
         }

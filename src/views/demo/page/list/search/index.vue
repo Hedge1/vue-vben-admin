@@ -1,13 +1,13 @@
 <template>
-  <div :class="prefixCls">
-    <a-page-header title="搜索列表" :ghost="false" :class="`${prefixCls}__header`">
+  <PageWrapper :class="prefixCls" title="搜索列表">
+    <template #headerContent>
       <BasicForm
         :class="`${prefixCls}__header-form`"
         :labelWidth="100"
         :schemas="schemas"
         :showActionButtonGroup="false"
       />
-    </a-page-header>
+    </template>
 
     <div :class="`${prefixCls}__container`">
       <a-list>
@@ -15,7 +15,9 @@
           <a-list-item>
             <a-list-item-meta>
               <template #description>
-                <div :class="`${prefixCls}__content`">{{ item.content }}</div>
+                <div :class="`${prefixCls}__content`">
+                  {{ item.content }}
+                </div>
                 <div :class="`${prefixCls}__action`">
                   <template v-for="(action, index) in actions" :key="index">
                     <div :class="`${prefixCls}__action-item`">
@@ -32,10 +34,14 @@
                 </div>
               </template>
               <template #title>
-                <p :class="`${prefixCls}__title`"> {{ item.title }}</p>
+                <p :class="`${prefixCls}__title`">
+                  {{ item.title }}
+                </p>
                 <div>
                   <template v-for="(tag, index) in item.description" :key="index">
-                    <Tag class="mb-2">{{ tag }}</Tag>
+                    <Tag class="mb-2">
+                      {{ tag }}
+                    </Tag>
                   </template>
                 </div>
               </template>
@@ -44,7 +50,7 @@
         </template>
       </a-list>
     </div>
-  </div>
+  </PageWrapper>
 </template>
 <script lang="ts">
   import { Tag } from 'ant-design-vue';
@@ -52,9 +58,19 @@
   import Icon from '/@/components/Icon/index';
   import { BasicForm } from '/@/components/Form/index';
   import { actions, searchList, schemas } from './data';
+  import { PageWrapper } from '/@/components/Page';
+  import { List } from 'ant-design-vue';
 
   export default defineComponent({
-    components: { Icon, Tag, BasicForm },
+    components: {
+      Icon,
+      Tag,
+      BasicForm,
+      PageWrapper,
+      [List.name]: List,
+      [List.Item.name]: List.Item,
+      AListItemMeta: List.Item.Meta,
+    },
     setup() {
       return {
         prefixCls: 'list-search',
@@ -75,7 +91,6 @@
 
     &__container {
       padding: 12px;
-      margin: 24px;
       background: #fff;
     }
 

@@ -2,8 +2,10 @@
   <div class="p-4">
     <BasicTable @register="registerTable">
       <template #id="{ record }"> ID: {{ record.id }} </template>
-      <template #no="{ record }"
-        ><Tag color="green">{{ record.no }}</Tag>
+      <template #no="{ record }">
+        <Tag color="green">
+          {{ record.no }}
+        </Tag>
       </template>
       <template #img>
         <TableImg
@@ -35,6 +37,7 @@
       dataIndex: 'category',
       width: 80,
       align: 'center',
+      defaultHidden: true,
       slots: { customRender: 'category' },
     },
     {
@@ -74,6 +77,7 @@
         api: demoListApi,
         columns: columns,
         bordered: true,
+        showTableSetting: true,
       });
 
       return {

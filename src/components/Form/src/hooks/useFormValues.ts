@@ -1,9 +1,9 @@
-import { isArray, isFunction, isObject, isString } from '/@/utils/is';
-import moment from 'moment';
-import { unref, nextTick } from 'vue';
+import { isArray, isFunction, isObject, isString, isNullOrUnDef } from '/@/utils/is';
+import { dateUtil } from '/@/utils/dateUtil';
+
+import { unref } from 'vue';
 import type { Ref, ComputedRef } from 'vue';
 import type { FieldMapToTime, FormSchema } from '../types/form';
-import { useModalContext } from '/@/components/Modal';
 
 interface UseFormValuesContext {
   transformDateFuncRef: Ref<Fn>;
@@ -19,7 +19,6 @@ export function useFormValues({
   getSchema,
   formModel,
 }: UseFormValuesContext) {
-  const modalFn = useModalContext();
   // Processing form values
   function handleFormValues(values: Recordable) {
     if (!isObject(values)) {
@@ -58,15 +57,15 @@ export function useFormValues({
       return values;
     }
 
-    for (const [field, [startTimeKey, endTimeKey, format = 'YYYY-MM-DD']] of fieldMapToTime) {
+    for (const [field, [startTimeKey, endTimeKey], format = 'YYYY-MM-DD'] of fieldMapToTime) {
       if (!field || !startTimeKey || !endTimeKey || !values[field]) {
         continue;
       }
 
       const [startTime, endTime]: string[] = values[field];
 
-      values[startTimeKey] = moment(startTime).format(format);
-      values[endTimeKey] = moment(endTime).format(format);
+      values[startTimeKey] = dateUtil(startTime).format(format);
+      values[endTimeKey] = dateUtil(endTime).format(format);
       Reflect.deleteProperty(values, field);
     }
 
@@ -77,16 +76,13 @@ export function useFormValues({
     const schemas = unref(getSchema);
     const obj: Recordable = {};
     schemas.forEach((item) => {
-      if (item.defaultValue) {
-        obj[item.field] = item.defaultValue;
-        formModel[item.field] = item.defaultValue;
+      const { defaultValue } = item;
+      if (!isNullOrUnDef(defaultValue)) {
+        obj[item.field] = defaultValue;
+        formModel[item.field] = defaultValue;
       }
     });
     defaultValueRef.value = obj;
-    nextTick(() => {
-      //  Solve the problem of modal adaptive height calculation when the form is placed in the modal
-      modalFn?.redoModalHeight?.();
-    });
   }
 
   return { handleFormValues, initDefault };

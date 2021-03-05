@@ -13,6 +13,7 @@ const { t } = useI18n();
 
 export enum HandlerEnum {
   CHANGE_LAYOUT,
+  CHANGE_THEME_COLOR,
   // menu
   MENU_HAS_DRAG,
   MENU_ACCORDION,
@@ -39,6 +40,7 @@ export enum HandlerEnum {
   TABS_SHOW_QUICK,
   TABS_SHOW_REDO,
   TABS_SHOW,
+  TABS_SHOW_FOLD,
 
   LOCK_TIME,
   FULL_CONTENT,

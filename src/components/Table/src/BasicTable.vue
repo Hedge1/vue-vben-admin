@@ -20,7 +20,7 @@
       @advanced-change="redoHeight"
     >
       <template #[replaceFormSlotKey(item)]="data" v-for="item in getFormSlotKeys">
-        <slot :name="item" v-bind="data" />
+        <slot :name="item" v-bind="data"></slot>
       </template>
     </BasicForm>
 
@@ -32,7 +32,7 @@
       @change="handleTableChange"
     >
       <template #[item]="data" v-for="item in Object.keys($slots)">
-        <slot :name="item" v-bind="data" />
+        <slot :name="item" v-bind="data"></slot>
       </template>
       <template #[`header-${column.dataIndex}`] v-for="column in columns" :key="column.dataIndex">
         <HeaderCell :column="column" />
@@ -65,16 +65,17 @@
   import { useDesign } from '/@/hooks/web/useDesign';
 
   import { basicProps } from './props';
+  import expandIcon from './components/ExpandIcon';
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
 
   import './style/index.less';
   export default defineComponent({
-    props: basicProps,
     components: {
       Table,
       BasicForm,
       HeaderCell: createAsyncComponent(() => import('./components/HeaderCell.vue')),
     },
+    props: basicProps,
     emits: [
       'fetch-success',
       'fetch-error',
@@ -87,9 +88,12 @@
       'row-mouseleave',
       'edit-end',
       'edit-cancel',
+      'edit-row-end',
+      'edit-change',
     ],
     setup(props, { attrs, emit, slots }) {
       const tableElRef = ref<ComponentRef>(null);
+      const tableData = ref<Recordable[]>([]);
 
       const wrapRef = ref<Nullable<HTMLDivElement>>(null);
       const innerPropsRef = ref<Partial<BasicTableProps>>();
@@ -118,7 +122,7 @@
         getSelectRowKeys,
         deleteSelectRowByKey,
         setSelectedRowKeys,
-      } = useRowSelection(getProps, emit);
+      } = useRowSelection(getProps, tableData, emit);
 
       const {
         handleTableChange,
@@ -133,6 +137,7 @@
       } = useDataSource(
         getProps,
         {
+          tableData,
           getPaginationInfo,
           setLoading,
           setPagination,
@@ -142,10 +147,14 @@
         emit
       );
 
-      const { getViewColumns, getColumns, setColumns, getColumnsRef, getCacheColumns } = useColumns(
-        getProps,
-        getPaginationInfo
-      );
+      const {
+        getViewColumns,
+        getColumns,
+        setCacheColumnsByField,
+        setColumns,
+        getColumnsRef,
+        getCacheColumns,
+      } = useColumns(getProps, getPaginationInfo);
 
       const { getScrollRef, redoHeight } = useTableScroll(
         getProps,
@@ -185,6 +194,7 @@
           size: 'middle',
           ...attrs,
           customRow,
+          expandIcon: expandIcon(),
           ...unref(getProps),
           ...unref(getHeaderProps),
           scroll: unref(getScrollRef),
@@ -200,6 +210,7 @@
         if (slots.expandedRowRender) {
           propsData = omit(propsData, 'scroll');
         }
+
         return propsData;
       });
 
@@ -237,6 +248,7 @@
         updateTableData,
         setShowPagination,
         getShowPagination,
+        setCacheColumnsByField,
         getSize: () => {
           return unref(getBindValues).size as SizeType;
         },

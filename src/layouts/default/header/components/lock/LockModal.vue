@@ -8,8 +8,10 @@
   >
     <div :class="`${prefixCls}__entry`">
       <div :class="`${prefixCls}__header`">
-        <img src="/@/assets/images/header.jpg" :class="`${prefixCls}__header-img`" />
-        <p :class="`${prefixCls}__header-name`">{{ getRealName }}</p>
+        <img :src="headerImg" :class="`${prefixCls}__header-img`" />
+        <p :class="`${prefixCls}__header-name`">
+          {{ getRealName }}
+        </p>
       </div>
 
       <BasicForm @register="registerForm" />
@@ -31,6 +33,7 @@
 
   import { userStore } from '/@/store/modules/user';
   import { lockStore } from '/@/store/modules/lock';
+  import headerImg from '/@/assets/images/header.jpg';
   export default defineComponent({
     name: 'LockModal',
     components: { BasicModal, BasicForm },
@@ -75,12 +78,12 @@
         register,
         registerForm,
         handleLock,
+        headerImg,
       };
     },
   });
 </script>
 <style lang="less">
-  @import (reference) '../../../../../design/index.less';
   @prefix-cls: ~'@{namespace}-header-lock-modal';
 
   .@{prefix-cls} {

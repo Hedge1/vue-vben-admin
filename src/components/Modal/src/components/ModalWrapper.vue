@@ -1,7 +1,7 @@
 <template>
-  <ScrollContainer ref="wrapperRef" :style="wrapStyle">
+  <ScrollContainer ref="wrapperRef">
     <div ref="spinRef" :style="spinStyle" v-loading="loading" :loading-tip="loadingTip">
-      <slot />
+      <slot></slot>
     </div>
   </ScrollContainer>
 </template>
@@ -20,7 +20,6 @@
     nextTick,
     onUnmounted,
   } from 'vue';
-  import { Spin } from 'ant-design-vue';
 
   import { useWindowSizeFn } from '/@/hooks/event/useWindowSizeFn';
   import { ScrollContainer } from '/@/components/Container';
@@ -31,12 +30,13 @@
 
   export default defineComponent({
     name: 'ModalWrapper',
-    components: { Spin, ScrollContainer },
+    components: { ScrollContainer },
+    inheritAttrs: false,
     props: {
       loading: propTypes.bool,
       useWrapper: propTypes.bool.def(true),
-      modalHeaderHeight: propTypes.number.def(50),
-      modalFooterHeight: propTypes.number.def(54),
+      modalHeaderHeight: propTypes.number.def(57),
+      modalFooterHeight: propTypes.number.def(74),
       minHeight: propTypes.number.def(200),
       height: propTypes.number,
       footerOffset: propTypes.number.def(0),
@@ -51,29 +51,22 @@
       const realHeightRef = ref(0);
       const minRealHeightRef = ref(0);
 
+      let realHeight = 0;
+
       let stopElResizeFn: Fn = () => {};
 
-      useWindowSizeFn(setModalHeight);
+      useWindowSizeFn(setModalHeight.bind(null, false));
 
       createModalContext({
         redoModalHeight: setModalHeight,
       });
 
-      const wrapStyle = computed(
-        (): CSSProperties => {
-          return {
-            minHeight: `${props.minHeight}px`,
-            height: `${unref(realHeightRef)}px`,
-            // overflow: 'auto',
-          };
-        }
-      );
-
       const spinStyle = computed(
         (): CSSProperties => {
           return {
+            minHeight: `${props.minHeight}px`,
             // padding 28
-            height: `${unref(realHeightRef) - 28}px`,
+            height: `${unref(realHeightRef)}px`,
           };
         }
       );
@@ -104,12 +97,21 @@
         stopElResizeFn && stopElResizeFn();
       });
 
+      async function scrollTop() {
+        nextTick(() => {
+          const wrapperRefDom = unref(wrapperRef);
+          if (!wrapperRefDom) return;
+          (wrapperRefDom as any)?.scrollTo?.(0);
+        });
+      }
+
       async function setModalHeight() {
         // 解决在弹窗关闭的时候监听还存在,导致再次打开弹窗没有高度
         // 加上这个,就必须在使用的时候传递父级的visible
         if (!props.visible) return;
         const wrapperRefDom = unref(wrapperRef);
         if (!wrapperRefDom) return;
+
         const bodyDom = wrapperRefDom.$el.parentElement;
         if (!bodyDom) return;
         bodyDom.style.padding = '0';
@@ -136,18 +138,20 @@
           const spinEl = unref(spinRef);
 
           if (!spinEl) return;
-
-          const realHeight = spinEl.scrollHeight;
+          await nextTick();
+          // if (!realHeight) {
+          realHeight = spinEl.scrollHeight;
+          // }
 
           if (props.fullScreen) {
             realHeightRef.value =
-              window.innerHeight - props.modalFooterHeight - props.modalHeaderHeight;
+              window.innerHeight - props.modalFooterHeight - props.modalHeaderHeight - 28;
           } else {
             realHeightRef.value = props.height
               ? props.height
               : realHeight > maxHeight
               ? maxHeight
-              : realHeight + 16 + 30;
+              : realHeight;
           }
           emit('height-change', unref(realHeightRef));
         } catch (error) {
@@ -155,7 +159,7 @@
         }
       }
 
-      return { wrapStyle, wrapperRef, spinRef, spinStyle };
+      return { wrapperRef, spinRef, spinStyle, scrollTop, setModalHeight };
     },
   });
 </script>

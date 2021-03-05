@@ -4,6 +4,7 @@ import { isObject } from '/@/utils/is';
 export const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
 export const noop = () => {};
 export const now = () => Date.now();
+
 /**
  * @description:  Set ui mount node
  */
@@ -23,17 +24,11 @@ export function getPopupContainer(node?: HTMLElement): HTMLElement {
  */
 export function setObjToUrlParams(baseUrl: string, obj: any): string {
   let parameters = '';
-  let url = '';
   for (const key in obj) {
     parameters += key + '=' + encodeURIComponent(obj[key]) + '&';
   }
   parameters = parameters.replace(/&$/, '');
-  if (/\?$/.test(baseUrl)) {
-    url = baseUrl + parameters;
-  } else {
-    url = baseUrl.replace(/\/?$/, '?') + parameters;
-  }
-  return url;
+  return /\?$/.test(baseUrl) ? baseUrl + parameters : baseUrl.replace(/\/?$/, '?') + parameters;
 }
 
 export function deepMerge<T = any>(src: any = {}, target: any = {}): T {
@@ -42,24 +37,6 @@ export function deepMerge<T = any>(src: any = {}, target: any = {}): T {
     src[key] = isObject(src[key]) ? deepMerge(src[key], target[key]) : (src[key] = target[key]);
   }
   return src;
-}
-
-/**
- * @description: 根据数组中某个对象值去重
- */
-export function unique<T = any>(arr: T[], key: string): T[] {
-  const map = new Map();
-  return arr.filter((item) => {
-    const _item = item as any;
-    return !map.has(_item[key]) && map.set(_item[key], 1);
-  });
-}
-
-/**
- * @description: es6数组去重复
- */
-export function es6Unique<T>(arr: T[]): T[] {
-  return Array.from(new Set(arr));
 }
 
 export function openWindow(
@@ -84,4 +61,33 @@ export function getDynamicProps<T, U>(props: T): Partial<U> {
   });
 
   return ret as Partial<U>;
+}
+
+/**
+ * set page Title
+ * @param {*} title  :page Title
+ */
+function setDocumentTitle(title: string) {
+  document.title = title;
+  const ua = navigator.userAgent;
+  const regex = /\bMicroMessenger\/([\d.]+)/;
+  // 兼容
+  if (regex.test(ua) && /ip(hone|od|ad)/i.test(ua)) {
+    const i = document.createElement('iframe');
+    i.src = '/favicon.ico';
+    i.style.display = 'none';
+    i.onload = function () {
+      setTimeout(function () {
+        i.remove();
+      }, 9);
+    };
+    document.body.appendChild(i);
+  }
+}
+
+export function setTitle(title: string, appTitle?: string) {
+  if (title) {
+    const _title = title ? ` ${title} - ${appTitle} ` : `${appTitle}`;
+    setDocumentTitle(_title);
+  }
 }

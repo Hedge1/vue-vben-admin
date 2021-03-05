@@ -4,6 +4,7 @@
 -->
 <template>
   <Dropdown
+    placement="bottomCenter"
     :trigger="['click']"
     :dropMenuList="localeList"
     :selectedKeys="selectedKeys"
@@ -11,29 +12,27 @@
     :overlayClassName="`${prefixCls}-overlay`"
   >
     <span :class="prefixCls">
-      <Icon icon="cil:language" />
+      <Icon icon="ion:language" />
       <span v-if="showText" :class="`${prefixCls}__text`">{{ getLangText }}</span>
     </span>
   </Dropdown>
 </template>
 <script lang="ts">
+  import type { LocaleType } from '/#/config';
+  import type { DropMenu } from '/@/components/Dropdown';
+
   import { defineComponent, ref, watchEffect, unref, computed } from 'vue';
-
-  import { Dropdown, DropMenu } from '/@/components/Dropdown';
-  import { GlobalOutlined } from '@ant-design/icons-vue';
-
-  import { useLocale } from '/@/hooks/web/useLocale';
-  import { useLocaleSetting } from '/@/hooks/setting/useLocaleSetting';
-
-  import { LocaleType } from '/@/locales/types';
-
-  import { propTypes } from '/@/utils/propTypes';
-  import { useDesign } from '/@/hooks/web/useDesign';
-
+  import { Dropdown } from '/@/components/Dropdown';
   import Icon from '/@/components/Icon';
+
+  import { useLocale } from '/@/locales/useLocale';
+  import { localeList } from '/@/settings/localeSetting';
+  import { useDesign } from '/@/hooks/web/useDesign';
+  import { propTypes } from '/@/utils/propTypes';
+
   export default defineComponent({
     name: 'AppLocalPicker',
-    components: { GlobalOutlined, Dropdown, Icon },
+    components: { Dropdown, Icon },
     props: {
       // Whether to display text
       showText: propTypes.bool.def(true),
@@ -45,9 +44,7 @@
 
       const { prefixCls } = useDesign('app-locale-picker');
 
-      const { localeList } = useLocaleSetting();
-
-      const { changeLocale, getLang } = useLocale();
+      const { changeLocale, getLocale } = useLocale();
 
       const getLangText = computed(() => {
         const key = selectedKeys.value[0];
@@ -56,16 +53,17 @@
       });
 
       watchEffect(() => {
-        selectedKeys.value = [unref(getLang)];
+        selectedKeys.value = [unref(getLocale)];
       });
 
-      function toggleLocale(lang: LocaleType | string) {
-        changeLocale(lang as LocaleType);
+      async function toggleLocale(lang: LocaleType | string) {
+        await changeLocale(lang as LocaleType);
         selectedKeys.value = [lang as string];
         props.reload && location.reload();
       }
 
       function handleMenuEvent(menu: DropMenu) {
+        if (unref(getLocale) === menu.event) return;
         toggleLocale(menu.event as string);
       }
 
@@ -75,7 +73,6 @@
 </script>
 
 <style lang="less" scoped>
-  @import (reference) '../../../design/index.less';
   @prefix-cls: ~'@{namespace}-app-locale-picker';
 
   :global(.@{prefix-cls}-overlay) {

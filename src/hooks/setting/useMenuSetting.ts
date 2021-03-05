@@ -1,4 +1,4 @@
-import type { MenuSetting } from '/@/types/config';
+import type { MenuSetting } from '/#/config';
 
 import { computed, unref, ref } from 'vue';
 
@@ -78,6 +78,11 @@ const getIsMixMode = computed(() => {
 });
 
 const getRealWidth = computed(() => {
+  if (unref(getIsMixSidebar)) {
+    return unref(getCollapsed) && !unref(getMixSideFixed)
+      ? unref(getMiniWidthNumber)
+      : unref(getMenuWidth);
+  }
   return unref(getCollapsed) ? unref(getMiniWidthNumber) : unref(getMenuWidth);
 });
 
@@ -91,7 +96,7 @@ const getCalcContentWidth = computed(() => {
     unref(getIsTopMenu) || !unref(getShowMenu) || (unref(getSplit) && unref(getMenuHidden))
       ? 0
       : unref(getIsMixSidebar)
-      ? SIDE_BAR_SHOW_TIT_MINI_WIDTH +
+      ? (unref(getCollapsed) ? SIDE_BAR_MINI_WIDTH : SIDE_BAR_SHOW_TIT_MINI_WIDTH) +
         (unref(getMixSideFixed) && unref(mixSideHasChildren) ? unref(getRealWidth) : 0)
       : unref(getRealWidth);
 
