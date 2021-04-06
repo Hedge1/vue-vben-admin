@@ -1,3 +1,85 @@
+## [2.1.1](https://github.com/anncwb/vue-vben-admin/compare/v2.1.0...v2.1.1) (2021-03-25)
+
+### Bug Fixes
+
+- **form:** ensure that the hidden fields of the form are verified properly, fix [#413](https://github.com/anncwb/vue-vben-admin/issues/413) ([237f41d](https://github.com/anncwb/vue-vben-admin/commit/237f41da68592ede236b722157c91f9d7b45db1b))
+- **icon:** ensure the menu icon style is correct, fix [#425](https://github.com/anncwb/vue-vben-admin/issues/425) ([5c57a1d](https://github.com/anncwb/vue-vben-admin/commit/5c57a1dda13975c13e65511a39e7483e4a5d3999))
+- add route base close [#404](https://github.com/anncwb/vue-vben-admin/issues/404) ([8ad127c](https://github.com/anncwb/vue-vben-admin/commit/8ad127c293872aa10db03044bbc68715dc1b804a))
+- ensure permissionMode exists close [#409](https://github.com/anncwb/vue-vben-admin/issues/409) ([8fb0396](https://github.com/anncwb/vue-vben-admin/commit/8fb03961f50051695983f8cb415d6009b9d6b643))
+- refresh error ([5bf90ee](https://github.com/anncwb/vue-vben-admin/commit/5bf90eea627638517e3ced024289696a6ece8e74))
+- **input-count:** make sure the reset function works close [#381](https://github.com/anncwb/vue-vben-admin/issues/381) ([3c4de9b](https://github.com/anncwb/vue-vben-admin/commit/3c4de9b0be06350f0d9ad97bfb5f7f773c38be38))
+- **menu:** ensure the menu has meta attributes close [#397](https://github.com/anncwb/vue-vben-admin/issues/397) ([b2a1951](https://github.com/anncwb/vue-vben-admin/commit/b2a1951fd00433cb5e1c9dce982c53a9c9edd874))
+- **menu:** fix the menu disappeared in background mode ([50915c9](https://github.com/anncwb/vue-vben-admin/commit/50915c9754473ba9096b3b1cceedf0d7e7212ad9))
+- **menu:** make sure the menu is displayed properly on the small screen close [#336](https://github.com/anncwb/vue-vben-admin/issues/336) ([82c3186](https://github.com/anncwb/vue-vben-admin/commit/82c3186309971517183fc44bfcac159612e48a7b))
+- **progress:** fix progress sometimes cannot done ([#388](https://github.com/anncwb/vue-vben-admin/issues/388)) ([8360b1d](https://github.com/anncwb/vue-vben-admin/commit/8360b1d6886b5639cf43da5ab866156d140a0f01))
+- **route:** ensure that the first level menu can be hidden ([e2cc5af](https://github.com/anncwb/vue-vben-admin/commit/e2cc5af9375f59d2891be769010ef5d3ccfe9755))
+- **table:** ensure that the height calculation is correct close [#395](https://github.com/anncwb/vue-vben-admin/issues/395) ([1d7608e](https://github.com/anncwb/vue-vben-admin/commit/1d7608ee40c27ce81e031947ed6c679cc8b04c77))
+- **table:** fix table check column configuration failure close [#391](https://github.com/anncwb/vue-vben-admin/issues/391) ([c3096e2](https://github.com/anncwb/vue-vben-admin/commit/c3096e26ff24c8afd9555e676c898030664846d7))
+- **tree:** ensure that the check event is emitted close [#400](https://github.com/anncwb/vue-vben-admin/issues/400) ([16ef134](https://github.com/anncwb/vue-vben-admin/commit/16ef13477c8f06c13ff3611b9e67e430fac433e7))
+- ensure the breadcrumb level is correct ([e49072c](https://github.com/anncwb/vue-vben-admin/commit/e49072c31339ba58473ffa883308cc3c2c4c43e9))
+- LayoutMap cannot get correctly ([#398](https://github.com/anncwb/vue-vben-admin/issues/398)) ([7c16c2f](https://github.com/anncwb/vue-vben-admin/commit/7c16c2fa9e6cb2e87894666d6687eed3fc744b64))
+- welcome page not cached in back-end mode ([#389](https://github.com/anncwb/vue-vben-admin/issues/389)) ([f0b93b5](https://github.com/anncwb/vue-vben-admin/commit/f0b93b50e7b6b9c444f8422f91be73085be8c5fe))
+- **v-auth:** ensure the background mode is correct close [#330](https://github.com/anncwb/vue-vben-admin/issues/330) ([67962f1](https://github.com/anncwb/vue-vben-admin/commit/67962f1deea31d695d20ae0ea7fc39b39c1eea47))
+
+### Features
+
+- **route:** add hideChildrenInMenu option close [#346](https://github.com/anncwb/vue-vben-admin/issues/346) ([b67cf22](https://github.com/anncwb/vue-vben-admin/commit/b67cf22dfc8d27428b045f47fcd9e2797b81a81d))
+- **table:** add expandAll/collapseAll function close [#333](https://github.com/anncwb/vue-vben-admin/issues/333) ([391da9e](https://github.com/anncwb/vue-vben-admin/commit/391da9ec2884885f9dfe86ddb869ccc0d193491e))
+
+# [2.1.0](https://github.com/anncwb/vue-vben-admin/compare/v2.0.3...v2.1.0) (2021-03-15)
+
+### Bug Fixes
+
+- **button:** fix button style error close [#312](https://github.com/anncwb/vue-vben-admin/issues/312) ([7a6c87f](https://github.com/anncwb/vue-vben-admin/commit/7a6c87f8c1aa34a7a00506fb89fb231e3a176f6f))
+- **menu:** fix hideMenu not working close [#338](https://github.com/anncwb/vue-vben-admin/issues/338) ([5b2fbfb](https://github.com/anncwb/vue-vben-admin/commit/5b2fbfb6ce4054ece60c851c45baf60f3a07a4db))
+- **page-wraper:** fix PageWrapper the scroll bar on the right side of the content area when the user clicks on the tab page to reload the page ([#341](https://github.com/anncwb/vue-vben-admin/issues/341)) ([fcff2cb](https://github.com/anncwb/vue-vben-admin/commit/fcff2cb1911f1e18017f25b3509d1c67f7e86e81))
+- **page-wrapper:** fix PageWrapper title not showing ([9e3adaa](https://github.com/anncwb/vue-vben-admin/commit/9e3adaa30c7cdaf23855922100e16717856ba1d9))
+- **table:** ensure that editable cell values are echoed correctly close [#335](https://github.com/anncwb/vue-vben-admin/issues/335) ([fab7a6c](https://github.com/anncwb/vue-vben-admin/commit/fab7a6c58d586300d58e1b6837927e1569b57aa5))
+- **table:** ensure that the height calculation is normal close [#349](https://github.com/anncwb/vue-vben-admin/issues/349) ([6095cb5](https://github.com/anncwb/vue-vben-admin/commit/6095cb54afe3f4fcabbfff26ac6704ecfbbddae5))
+- **table:** ensure that the table height is correct when the data is empty ([53867a8](https://github.com/anncwb/vue-vben-admin/commit/53867a846154d9a3529f50d20d92ce5fdb41986f))
+- **table:** ensure that the value of the table action is updated correctly close [#301](https://github.com/anncwb/vue-vben-admin/issues/301) [#313](https://github.com/anncwb/vue-vben-admin/issues/313) ([7156e47](https://github.com/anncwb/vue-vben-admin/commit/7156e47c1813ec01594d9dff4a1e7d593f3c17db))
+- **table:** fix table height calculation problem ([0fe42a0](https://github.com/anncwb/vue-vben-admin/commit/0fe42a06c1f2ef69805dbfeecbcac919ff0aedd0)), closes [#348](https://github.com/anncwb/vue-vben-admin/issues/348)
+- **table:** fix table row misalignment close [#353](https://github.com/anncwb/vue-vben-admin/issues/353) ([e15737b](https://github.com/anncwb/vue-vben-admin/commit/e15737b9d17d8ebea4f4e9897aeae9b250910a15))
+- **table:** fix TableAction row height error close [#350](https://github.com/anncwb/vue-vben-admin/issues/350) ([a759e44](https://github.com/anncwb/vue-vben-admin/commit/a759e44c6e5c223d2fef52c5a9698e571eed2d52))
+- **transition:** fix transition not work close [#334](https://github.com/anncwb/vue-vben-admin/issues/334) ([7d8b8db](https://github.com/anncwb/vue-vben-admin/commit/7d8b8db256f78b228b2b4629a472834a4cce9bd4))
+- **tree:** ebsure the expansion is functioning properly close [#362](https://github.com/anncwb/vue-vben-admin/issues/362) ([a405de8](https://github.com/anncwb/vue-vben-admin/commit/a405de8d202710264e802edb270bbd5cd4a1ab80))
+- **tree:** tree can customize title close [#344](https://github.com/anncwb/vue-vben-admin/issues/344) ([ed422b7](https://github.com/anncwb/vue-vben-admin/commit/ed422b7c56bf9d44be001b8a54358d69c100ff35))
+- **useTableScroll:** query paginationel every time to get the correct height ([#355](https://github.com/anncwb/vue-vben-admin/issues/355)) ([f818bb9](https://github.com/anncwb/vue-vben-admin/commit/f818bb9a107e43adfb8ef2a095635f5fffb5800b))
+
+### Features
+
+- **icon:** added svg icon picker ([1418dc6](https://github.com/anncwb/vue-vben-admin/commit/1418dc6a597a8410711359f07ae66f0fea858977))
+- **map:** added AMap/Baidu/Google Map example close [#81](https://github.com/anncwb/vue-vben-admin/issues/81) ([a9462f0](https://github.com/anncwb/vue-vben-admin/commit/a9462f0d4dacb8db9300c416b2d3f094be624220))
+- **time:** added time compoennt close [#285](https://github.com/anncwb/vue-vben-admin/issues/285) ([a89eeef](https://github.com/anncwb/vue-vben-admin/commit/a89eeef6f3a0b9863d28cf516b126a938eed7361))
+
+### Performance Improvements
+
+- **icon:** icon and SvgIcon integration ([e8fe6a9](https://github.com/anncwb/vue-vben-admin/commit/e8fe6a929be025a889ddec624ff9c2729313c818))
+
+## [2.0.3](https://github.com/anncwb/vue-vben-admin/compare/v2.0.2...v2.0.3) (2021-03-07)
+
+### Bug Fixes
+
+- **breadcrumb:** ensure that the single-level breadcrumbs jump correctly close [#321](https://github.com/anncwb/vue-vben-admin/issues/321) ([e0dc5cf](https://github.com/anncwb/vue-vben-admin/commit/e0dc5cf2f299fd4c1efdf4f00b9f0f72f07d5937))
+- **description:** ensure that props respond ([ce93e46](https://github.com/anncwb/vue-vben-admin/commit/ce93e46faf1d7250dd3acd3fd97ccd6382b2f822))
+- **form:** allow the setFieldsValue method to be null or undefined close [#320](https://github.com/anncwb/vue-vben-admin/issues/320) ([8f76ef4](https://github.com/anncwb/vue-vben-admin/commit/8f76ef4e70de58ba5c4497d8b10a036a54a9ac87))
+- **form:** ensure that the Form component does not verify hidden form items ([43a45b7](https://github.com/anncwb/vue-vben-admin/commit/43a45b7c996c84f19d00cb9754277b943daf9a10))
+- **form:** fix the problem of form props monitoring close [#322](https://github.com/anncwb/vue-vben-admin/issues/322) ([83a3460](https://github.com/anncwb/vue-vben-admin/commit/83a34603562e6358203b834b8feb59b0b44dbbcd))
+- **menu:** fix menu icon missing close [#328](https://github.com/anncwb/vue-vben-admin/issues/328) ([d5d4c4b](https://github.com/anncwb/vue-vben-admin/commit/d5d4c4b4136158e061e4a3b6b306af6d4e8cd621))
+- **table:** fix pagination error ([745fcfc](https://github.com/anncwb/vue-vben-admin/commit/745fcfc014e3e9e13d6a415a8f094cfef68be908))
+- **tree:** fix the logic problem of show attribute of ActionItem under BasicTree ([80b47c8](https://github.com/anncwb/vue-vben-admin/commit/80b47c84cd490388c6db659921f1103c443d7b9d))
+
+### Features
+
+- add SvgIcon component ([9c2a2a0](https://github.com/anncwb/vue-vben-admin/commit/9c2a2a0c00dae6f334c99acc9ab2f571fd8905c0))
+- **tree:** add clickRowToExpand option close [#318](https://github.com/anncwb/vue-vben-admin/issues/318) ([e696089](https://github.com/anncwb/vue-vben-admin/commit/e696089660131786ea24632ed75adc57b6ea58f4))
+
+### Performance Improvements
+
+- optimize local loading speed close [#329](https://github.com/anncwb/vue-vben-admin/issues/329) ([491f1fc](https://github.com/anncwb/vue-vben-admin/commit/491f1fcfff17f2297e3fee00e1542778aed08e56))
+- **login:** enter to log in ([b93f20f](https://github.com/anncwb/vue-vben-admin/commit/b93f20f0df91689191b8414657171e9f17ba5d68))
+- **table:** the table fills the height according to the screen close [#310](https://github.com/anncwb/vue-vben-admin/issues/310) ([551fe50](https://github.com/anncwb/vue-vben-admin/commit/551fe50a44d0b6358cf3861f772ca223ea56f0e2))
+
 ## [2.0.2](https://github.com/anncwb/vue-vben-admin/compare/v2.0.0...v2.0.2) (2021-03-03)
 
 ### Bug Fixes

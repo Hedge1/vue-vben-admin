@@ -1,3 +1,84 @@
+## 2.1.1 (2021-03-26)
+
+### ✨ Features
+
+- Added hideChildrenInMenu configuration for routing. Used to hide submenu
+- Built-in expand/collapse all functions in the tree form
+
+### ✨ Refactor
+
+- Refactor the routing multi-layer mode to solve the problem of multiple implementations of nested keepalives
+
+### 🐛 Bug Fixes
+
+- Ensure that the CountDownInput component is reset to the empty value
+- Fix the display problem on the small screen in split mode
+- Fix table height calculation problem
+- Fix the problem that components cannot be obtained by background routing
+- Fix Modal component loadingTip configuration does not take effect
+- Fix the background permission command does not take effect
+- Make sure the progress bar is closed properly
+- Fix the problem of invalid table check column configuration
+- Ensure that the first level menu can be hidden
+- Ensure that the hidden fields of the form are verified properly
+
+### 🎫 Chores
+
+- Remove ls-lint
+
+### 🎫 Chores
+
+- 移除 ls-lint
+
+## 2.1.0 (2021-03-15)
+
+### ✨ Features
+
+- Added svg mode to icon selector
+- Added time component
+- Added AutoNavi/Baidu/Google Map example
+
+### ✨ Refactor
+
+- Refactor the project to solve the hot update problem caused by circular dependencies
+- Remove vueHelper/useClickoutside, use @vueuse/core instead
+
+### 🐛 Bug Fixes
+
+- Ensure that the value of `table action` is updated correctly
+- Fix the animation of page switching cannot be closed
+- Fix `PageWrapper`title not showing
+- Fix the known issues of the table
+- Fix the problem that the BasicTree component can't customize the title
+- Fix the button style problem after theme switching
+
+## 2.0.3 (2021-03-07)
+
+### ✨ Features
+
+- `BasicTree` added `clickRowToExpand`, used to click tree node to expand
+- Added SvgIcon plugin and examples
+- Add the department tree on the left side of the account management interface·
+
+### ⚡ Performance Improvements
+
+- Pagination parameters are no longer carried when the table is closed
+- The login page monitors the carriage return event to log in
+- When the adaptive size of the table is set, the height is filled according to the screen.
+- Tree scroll bar optimization
+- Optimize the loading speed of local development
+
+### 🐛 Bug Fixes
+
+- Fix known issues with `Description`
+- Fix known issues with `BasicForm`
+- Fix the logic problem of show attribute of ActionItem under `BasicTree`
+- Fix the style error of the tree component demo example
+- Repair account management to add new but not cleared old data
+- The form component should allow the setFieldsValue method to be null or undefined
+- Ensure that the single-level breadcrumbs jump correctly
+- Ensure that the Form component does not verify hidden form items
+
 ## 2.0.2 (2021-03-04)
 
 ### ✨ Refactor

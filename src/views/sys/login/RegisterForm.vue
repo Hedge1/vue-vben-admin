@@ -47,7 +47,7 @@
         class="enter-x"
         size="large"
         block
-        @click="handleReset"
+        @click="handleRegister"
         :loading="loading"
       >
         {{ t('sys.login.registerButton') }}
@@ -86,7 +86,7 @@
       const { t } = useI18n();
       const { handleBackLogin, getLoginState } = useLoginState();
 
-      const formRef = ref<any>(null);
+      const formRef = ref();
       const loading = ref(false);
 
       const formData = reactive({
@@ -103,7 +103,7 @@
 
       const getShow = computed(() => unref(getLoginState) === LoginStateEnum.REGISTER);
 
-      async function handleReset() {
+      async function handleRegister() {
         const data = await validForm();
         if (!data) return;
         console.log(data);
@@ -114,7 +114,7 @@
         formRef,
         formData,
         getFormRules,
-        handleReset,
+        handleRegister,
         loading,
         handleBackLogin,
         getShow,

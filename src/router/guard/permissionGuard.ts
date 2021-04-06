@@ -5,7 +5,7 @@ import { permissionStore } from '/@/store/modules/permission';
 import { PageEnum } from '/@/enums/pageEnum';
 import { userStore } from '/@/store/modules/user';
 
-import { PAGE_NOT_FOUND_ROUTE } from '/@/router/constant';
+import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN;
 
@@ -38,7 +38,7 @@ export function createPermissionGuard(router: Router) {
         return;
       }
       // redirect login page
-      const redirectData: { path: string; replace: boolean; query?: Indexable<string> } = {
+      const redirectData: { path: string; replace: boolean; query?: Recordable<string> } = {
         path: LOGIN_PATH,
         replace: true,
       };

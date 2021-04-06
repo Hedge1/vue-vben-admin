@@ -32,4 +32,7 @@ export default {
   upload: 'Upload',
 
   loading: 'Loading',
+
+  time: 'Relative Time',
+  cropperImage: 'Cropper Image',
 };

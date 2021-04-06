@@ -1,15 +1,25 @@
 <script lang="tsx">
   import type { ReplaceFields, Keys, CheckKeys, TreeActionType, TreeItem } from './types';
 
-  import { defineComponent, reactive, computed, unref, ref, watchEffect, toRaw, watch } from 'vue';
-  import { Tree } from 'ant-design-vue';
+  import {
+    defineComponent,
+    reactive,
+    computed,
+    unref,
+    ref,
+    watchEffect,
+    toRaw,
+    watch,
+    CSSProperties,
+  } from 'vue';
+  import { Tree, Empty } from 'ant-design-vue';
   import { TreeIcon } from './TreeIcon';
   import TreeHeader from './TreeHeader.vue';
-  // import { DownOutlined } from '@ant-design/icons-vue';
+  import { ScrollContainer } from '/@/components/Container';
 
   import { omit, get } from 'lodash-es';
   import { isBoolean, isFunction } from '/@/utils/is';
-  import { extendSlots } from '/@/utils/helper/tsxHelper';
+  import { extendSlots, getSlot } from '/@/utils/helper/tsxHelper';
   import { filter } from '/@/utils/helper/treeHelper';
 
   import { useTree } from './useTree';
@@ -29,7 +39,7 @@
     name: 'BasicTree',
     inheritAttrs: false,
     props: basicProps,
-    emits: ['update:expandedKeys', 'update:selectedKeys', 'update:value', 'change'],
+    emits: ['update:expandedKeys', 'update:selectedKeys', 'update:value', 'change', 'check'],
     setup(props, { attrs, slots, emit }) {
       const state = reactive<State>({
         checkStrictly: props.checkStrictly,
@@ -60,16 +70,6 @@
         }
       );
 
-      // const getContentStyle = computed(
-      //   (): CSSProperties => {
-      //     const { actionList } = props;
-      //     const width = actionList.length * 18;
-      //     return {
-      //       width: `calc(100% - ${width}px)`,
-      //     };
-      //   }
-      // );
-
       const getBindValues = computed(() => {
         let propsData = {
           blockNode: true,
@@ -92,6 +92,7 @@
             state.checkedKeys = v;
             const rawVal = toRaw(v);
             emit('change', rawVal);
+            emit('check', rawVal);
             emit('update:value', rawVal);
           },
           onRightClick: handleRightClick,
@@ -103,6 +104,10 @@
       const getTreeData = computed((): TreeItem[] =>
         searchState.startSearch ? searchState.searchData : unref(treeDataRef)
       );
+
+      const getNotFound = computed((): boolean => {
+        return searchState.startSearch && searchState.searchData?.length === 0;
+      });
 
       const {
         deleteNodeByKey,
@@ -178,10 +183,10 @@
           return;
         }
         searchState.startSearch = true;
+        const { title: titleField } = unref(getReplaceFields);
 
         searchState.searchData = filter(unref(treeDataRef), (node) => {
-          const { title } = node;
-          return title?.includes(searchValue) ?? false;
+          return node[titleField]?.includes(searchValue) ?? false;
         });
       }
 
@@ -201,8 +206,17 @@
 
       watchEffect(() => {
         treeDataRef.value = props.treeData as TreeItem[];
+      });
+
+      watchEffect(() => {
         state.expandedKeys = props.expandedKeys;
+      });
+
+      watchEffect(() => {
         state.selectedKeys = props.selectedKeys;
+      });
+
+      watchEffect(() => {
         state.checkedKeys = props.checkedKeys;
       });
 
@@ -284,16 +298,19 @@
                 title: () => (
                   <span
                     class={`${prefixCls}-title pl-2`}
-                    onClick={handleClickNode.bind(null, item.key, children)}
+                    onClick={handleClickNode.bind(null, item[keyField], item[childrenField])}
                   >
-                    {icon && <TreeIcon icon={icon} />}
-                    <span
-                      class={`${prefixCls}__content`}
-                      //  style={unref(getContentStyle)}
-                    >
-                      {get(item, titleField)}
-                    </span>
-                    <span class={`${prefixCls}__actions`}> {renderAction({ ...item, level })}</span>
+                    {slots?.title ? (
+                      getSlot(slots, 'title', item)
+                    ) : (
+                      <>
+                        {icon && <TreeIcon icon={icon} />}
+                        <span class={`${prefixCls}__content`}>{get(item, titleField)}</span>
+                        <span class={`${prefixCls}__actions`}>
+                          {renderAction({ ...item, level })}
+                        </span>
+                      </>
+                    )}
                   </span>
                 ),
                 default: () => renderTreeNode({ data: children, level: level + 1 }),
@@ -303,11 +320,14 @@
         });
       }
       return () => {
-        const { title, helpMessage, toolbar, search } = props;
+        const { title, helpMessage, toolbar, search, checkable } = props;
+        const showTitle = title || toolbar || search || slots.headerTitle;
+        const scrollStyle: CSSProperties = { height: 'calc(100% - 38px)' };
         return (
           <div class={[prefixCls, 'h-full bg-white', attrs.class]}>
-            {(title || toolbar || search) && (
+            {showTitle && (
               <TreeHeader
+                checkable={checkable}
                 checkAll={checkAll}
                 expandAll={expandAll}
                 title={title}
@@ -316,15 +336,21 @@
                 helpMessage={helpMessage}
                 onStrictlyChange={onStrictlyChange}
                 onSearch={handleSearch}
-              />
+              >
+                {extendSlots(slots)}
+              </TreeHeader>
             )}
-            <Tree {...unref(getBindValues)} showIcon={false}>
-              {{
-                // switcherIcon: () => <DownOutlined />,
-                default: () => renderTreeNode({ data: unref(getTreeData), level: 1 }),
-                ...extendSlots(slots),
-              }}
-            </Tree>
+            <ScrollContainer style={scrollStyle} v-show={!unref(getNotFound)}>
+              <Tree {...unref(getBindValues)} showIcon={false}>
+                {{
+                  // switcherIcon: () => <DownOutlined />,
+                  default: () => renderTreeNode({ data: unref(getTreeData), level: 1 }),
+                  ...extendSlots(slots),
+                }}
+              </Tree>
+            </ScrollContainer>
+
+            <Empty v-show={unref(getNotFound)} class="!mt-4" />
           </div>
         );
       };

@@ -1,5 +1,3 @@
-import type { AxiosRequestConfig } from 'axios';
-import type { AxiosTransform } from './axiosTransform';
 export type ErrorMessageMode = 'none' | 'modal' | 'message' | undefined;
 
 export interface RequestOptions {
@@ -20,12 +18,6 @@ export interface RequestOptions {
   ignoreCancelToken?: boolean;
 }
 
-export interface CreateAxiosOptions extends AxiosRequestConfig {
-  prefixUrl?: string;
-  transform?: AxiosTransform;
-  requestOptions?: RequestOptions;
-}
-
 export interface Result<T = any> {
   code: number;
   type: 'success' | 'error' | 'warning';
@@ -36,7 +28,7 @@ export interface Result<T = any> {
 // multipart/form-data: upload file
 export interface UploadFileParams {
   // Other parameters
-  data?: Indexable;
+  data?: Recordable;
   // File parameter interface field name
   name?: string;
   // file name

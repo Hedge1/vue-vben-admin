@@ -2,6 +2,8 @@ import { generate } from '@ant-design/colors';
 
 export const primaryColor = '#0960bd';
 
+export const borderColorBase = '#d9d9d9';
+
 export const themeMode = 'light';
 
 export type ThemeMode = 'dark' | 'light';
@@ -38,22 +40,22 @@ export function generateColors({
   tinycolor,
 }: GenerateColorsParams) {
   const arr = new Array(19).fill(0);
-  const lightens = arr.map((t, i) => {
+  const lightens = arr.map((_t, i) => {
     return mixLighten(color, i / 5);
   });
 
-  const darkens = arr.map((t, i) => {
+  const darkens = arr.map((_t, i) => {
     return mixDarken(color, i / 5);
   });
 
-  const alphaColors = arr.map((t, i) => {
+  const alphaColors = arr.map((_t, i) => {
     return tinycolor(color)
       .setAlpha(i / 20)
       .toRgbString();
   });
 
   const tinycolorLightens = arr
-    .map((t, i) => {
+    .map((_t, i) => {
       return tinycolor(color)
         .lighten(i * 5)
         .toHexString();
@@ -61,7 +63,7 @@ export function generateColors({
     .filter((item) => item !== '#ffffff');
 
   const tinycolorDarkens = arr
-    .map((t, i) => {
+    .map((_t, i) => {
       return tinycolor(color)
         .darken(i * 5)
         .toHexString();
@@ -97,7 +99,7 @@ export function generateModifyVars() {
     'text-color-secondary': 'rgba(0, 0, 0, 0.45)', // Subtext color
     'font-size-base': '14px', //  Main font size
     'box-shadow-base': '0 2px 8px rgba(0, 0, 0, 0.15)', //  Floating shadow
-    'border-color-base': '#d9d9d9', //  Border color,
+    'border-color-base': borderColorBase, //  Border color,
     'border-radius-base': '2px', //  Component/float fillet
     'link-color': primary, //   Link color
   };

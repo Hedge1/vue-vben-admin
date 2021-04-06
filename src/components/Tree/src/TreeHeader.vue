@@ -1,10 +1,18 @@
 <template>
   <div class="flex px-2 py-1.5 items-center border-b-1">
-    <BasicTitle :helpMessage="helpMessage" v-if="title">{{ title }}</BasicTitle>
+    <slot name="headerTitle" v-if="$slots.headerTitle"></slot>
+    <BasicTitle :helpMessage="helpMessage" v-if="!$slots.headerTitle && title">
+      {{ title }}
+    </BasicTitle>
 
     <div class="flex flex-1 justify-end items-center cursor-pointer" v-if="search || toolbar">
       <div class="mr-1 w-2/3" v-if="search">
-        <InputSearch :placeholder="t('common.searchText')" size="small" @change="handleSearch" />
+        <InputSearch
+          :placeholder="t('common.searchText')"
+          size="small"
+          allowClear
+          @change="handleSearch"
+        />
       </div>
       <Dropdown @click.prevent v-if="toolbar">
         <Icon icon="ion:ellipsis-vertical" />
@@ -24,7 +32,7 @@
 </template>
 <script lang="ts">
   import type { PropType } from 'vue';
-  import { defineComponent, ref } from 'vue';
+  import { defineComponent, computed } from 'vue';
 
   import { Dropdown, Menu, Input } from 'ant-design-vue';
   import { Icon } from '/@/components/Icon';
@@ -58,6 +66,7 @@
       },
       title: propTypes.string,
       toolbar: propTypes.bool,
+      checkable: propTypes.bool,
       search: propTypes.bool,
       checkAll: propTypes.func,
       expandAll: propTypes.func,
@@ -65,14 +74,32 @@
     emits: ['strictly-change', 'search'],
     setup(props, { emit }) {
       const { t } = useI18n();
-      const toolbarList = ref([
-        { label: t('component.tree.selectAll'), value: ToolbarEnum.SELECT_ALL },
-        { label: t('component.tree.unSelectAll'), value: ToolbarEnum.UN_SELECT_ALL, divider: true },
-        { label: t('component.tree.expandAll'), value: ToolbarEnum.EXPAND_ALL },
-        { label: t('component.tree.unExpandAll'), value: ToolbarEnum.UN_EXPAND_ALL, divider: true },
-        { label: t('component.tree.checkStrictly'), value: ToolbarEnum.CHECK_STRICTLY },
-        { label: t('component.tree.checkUnStrictly'), value: ToolbarEnum.CHECK_UN_STRICTLY },
-      ]);
+
+      const toolbarList = computed(() => {
+        const { checkable } = props;
+        const defaultToolbarList = [
+          { label: t('component.tree.expandAll'), value: ToolbarEnum.EXPAND_ALL },
+          {
+            label: t('component.tree.unExpandAll'),
+            value: ToolbarEnum.UN_EXPAND_ALL,
+            divider: checkable,
+          },
+        ];
+
+        return checkable
+          ? [
+              { label: t('component.tree.selectAll'), value: ToolbarEnum.SELECT_ALL },
+              {
+                label: t('component.tree.unSelectAll'),
+                value: ToolbarEnum.UN_SELECT_ALL,
+                divider: checkable,
+              },
+              ...defaultToolbarList,
+              { label: t('component.tree.checkStrictly'), value: ToolbarEnum.CHECK_STRICTLY },
+              { label: t('component.tree.checkUnStrictly'), value: ToolbarEnum.CHECK_UN_STRICTLY },
+            ]
+          : defaultToolbarList;
+      });
 
       function handleMenuClick(e: MenuInfo) {
         const { key } = e;
